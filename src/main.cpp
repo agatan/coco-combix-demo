@@ -55,9 +55,14 @@ cbx::parser<int, stream_type> expression() {
 }
 
 int main() {
-  std::string const src = "(1+2)*3";
+  std::string src;
+  std::getline(std::cin, src);
   auto n = number();
   auto stream = cbx::range_stream(src);
   auto const parser = expression();
-  std::cout << cbx::parse(parser, stream).unwrap() << std::endl;
+  if (auto res = cbx::parse(parser, stream)) {
+    std::cout << res.unwrap() << std::endl;
+  } else {
+    std::cout << cbx::to_string(res.unwrap_error()) << std::endl;
+  }
 }
