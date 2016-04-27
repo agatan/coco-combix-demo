@@ -30,31 +30,37 @@ cbx::parser<int, stream_type> number() {
 }
 
 cbx::parser<int, stream_type> factor() {
-  return cbx::choice(number(), cbx::parens(cbx::lazy_fun(expression)));
+  return cbx::choice(
+      number(),
+      cbx::between(cbx::skip(cbx::token('('), cbx::spaces()),
+                   cbx::skip(cbx::token(')'), cbx::spaces()),
+                   cbx::skip(cbx::lazy_fun(expression), cbx::spaces())));
 }
 
 cbx::parser<int, stream_type> term() {
-  auto op = cbx::map(cbx::choice(cbx::token('*'), cbx::token('/')),
-                     [](auto c) -> std::function<int(int, int)> {
-                       if (c == '*') {
-                         return std::multiplies<int>();
-                       } else {
-                         return std::divides<int>();
-                       }
-                     });
-  return cbx::chainl1(factor(), op);
+  auto op = cbx::map(
+      cbx::skip(cbx::choice(cbx::token('*'), cbx::token('/')), cbx::spaces()),
+      [](auto c) -> std::function<int(int, int)> {
+        if (c == '*') {
+          return std::multiplies<int>();
+        } else {
+          return std::divides<int>();
+        }
+      });
+  return cbx::chainl1(cbx::skip(factor(), cbx::spaces()), op);
 }
 
 cbx::parser<int, stream_type> expression() {
-  auto op = cbx::map(cbx::choice(cbx::token('+'), cbx::token('-')),
-                     [](auto c) -> std::function<int(int, int)> {
-                       if (c == '+') {
-                         return std::plus<int>();
-                       } else {
-                         return std::minus<int>();
-                       }
-                     });
-  return cbx::chainl1(term(), op);
+  auto op = cbx::map(
+      cbx::skip(cbx::choice(cbx::token('+'), cbx::token('-')), cbx::spaces()),
+      [](auto c) -> std::function<int(int, int)> {
+        if (c == '+') {
+          return std::plus<int>();
+        } else {
+          return std::minus<int>();
+        }
+      });
+  return cbx::chainl1(cbx::skip(term(), cbx::spaces()), op);
 }
 
 int main() {
