@@ -1,3 +1,0 @@
-[submodule "coco"]
-	path = coco
-	url = git://github.com/agatan/coco.git

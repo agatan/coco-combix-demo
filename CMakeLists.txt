@@ -9,7 +9,7 @@ set(CMAKE_CXX_FLAGS "-std=c++14 -Wall -Wextra")
 set(CMAKE_CXX_FLAGS_DEBUG "-g3 -O0 -pg")
 set(CMAKE_CXX_FLAGS_RELEASE "-O2 -s -DNDEBUG")
 
-include_directories(include coco/include)
+include_directories(include)
 add_subdirectory(src)
 
 find_package(Boost 1.59.0 REQUIRED COMPONENTS system)

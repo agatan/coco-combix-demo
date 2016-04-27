@@ -24,7 +24,8 @@ cbx::parser<expr, stream_type> number() {
                                 [](auto&& is) {
                                   int acc = 0;
                                   for (auto i : is) {
-                                    acc = acc * 10 + i;
+                                    acc =
+                                        acc * 10 + (static_cast<int>(i) - '0');
                                   }
                                   return expr(std::make_shared<integer>(acc));
                                 }),
