@@ -2,6 +2,7 @@
 #include <iostream>
 #include <functional>
 
+#include <coco/combix/error.hpp>
 #include <coco/combix/parser_traits.hpp>
 #include <coco/combix/primitives.hpp>
 #include <coco/combix/combinators.hpp>
@@ -17,13 +18,15 @@ using stream_type = cbx::iterator_stream<std::string::const_iterator>;
 cbx::parser<int, stream_type> expression();
 
 cbx::parser<int, stream_type> number() {
-  return cbx::map(cbx::many1(cbx::digit()), [](auto&& is) {
-    int acc = 0;
-    for (auto i : is) {
-      acc = acc * 10 + i;
-    }
-    return acc;
-  });
+  return cbx::expected(cbx::map(cbx::many1(cbx::digit()),
+                                [](auto&& is) {
+                                  int acc = 0;
+                                  for (auto i : is) {
+                                    acc = acc * 10 + i;
+                                  }
+                                  return acc;
+                                }),
+                       "integer number");
 }
 
 cbx::parser<int, stream_type> factor() {
