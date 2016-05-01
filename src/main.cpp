@@ -119,6 +119,6 @@ int main() {
     std::cout << "Result: " << boost::apply_visitor(calculator(), *res)
               << std::endl;
   } else {
-    std::cout << cbx::to_string(res.unwrap_error()) << std::endl;
+    std::cout << res.unwrap_error() << std::endl;
   }
 }
